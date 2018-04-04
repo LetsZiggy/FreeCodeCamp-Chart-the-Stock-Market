@@ -1,0 +1,362 @@
+#home-content
+  position        : relative
+  display         : flex
+  flex-direction  : column
+  flex-wrap       : nowrap
+  justify-content : flex-start
+  align-items     : flex-start
+  align-content   : flex-start
+  width           : 100vw
+  height          : calc(100vh - 3rem)
+  box-sizing      : border-box
+  padding         : 0rem
+  margin          : 0rem
+  overflow        : hidden
+
+  #title
+    position         : relative
+    display          : flex
+    flex-direction   : row
+    flex-wrap        : nowrap
+    justify-content  : center
+    align-items      : center
+    align-content    : center
+    width            : 100%
+    height           : 2rem
+    font-weight      : bolder
+    padding          : 0.25rem 0rem
+    margin           : 0rem
+    border-bottom    : 1px solid lightgrey
+    box-sizing       : border-box
+    background-color : whitesmoke
+    user-select      : none
+
+    span
+      text-decoration : line-through
+      opacity         : 0.25
+      font-weight     : normal
+      user-select     : none
+
+    img
+      width         : 1.5rem
+      height        : 1.5rem
+      padding       : 0rem
+      margin        : 0rem 0.5rem 0rem 0rem
+      border-radius : 50px
+
+  #login-open-button:active
+    border : 2px solid black
+
+  #login-open-button:hover
+    background-color : darkgrey
+
+  #login-open-button
+    position         : absolute
+    right            : 0.5rem
+    top              : 0rem
+    z-index          : 5
+    display          : flex
+    flex-direction   : row
+    justify-content  : center
+    align-items      : center
+    align-content    : center
+    width            : auto
+    height           : 100%
+    padding          : 0rem 0.5rem
+    font-size        : 1rem
+    background-color : white
+    box-sizing       : border-box
+    border-left      : 2px solid lightgrey
+    border-right     : 2px solid lightgrey
+    cursor           : pointer
+    user-select      : none
+
+  #search
+    position        : relative
+    display         : flex
+    flex-direction  : row
+    flex-wrap       : wrap
+    justify-content : center
+    align-items     : center
+    align-content   : center
+    width           : 100%
+    height          : 5.5rem
+    box-sizing      : border-box
+
+    #search-title
+      width       : 100%
+      height      : auto
+      text-align  : center
+      margin      : 0.75rem 0rem 0rem 0rem
+      padding     : 0rem
+      user-select : none
+
+      h1
+        display     : inline-block
+        transform   : translateX(1.5rem)
+        margin      : 0.75rem 0rem 0rem 0rem
+        padding     : 0rem
+        user-select : none
+
+      span
+        display     : inline-block
+        transform   : translateX(1.5rem)
+        font-size   : 0.5rem
+        user-select : none
+        
+      img
+        display   : inline-block
+        width     : auto
+        height    : 1rem
+        transform : translate(1.5rem, 3px)
+
+    #search-form
+      position        : relative
+      display         : flex
+      flex-direction  : row
+      flex-wrap       : wrap
+      justify-content : center
+      align-items     : center
+      align-content   : center
+      width           : 100%
+      height          : 2.75rem
+      margin          : 0rem
+      padding         : 0rem
+
+      #search-input
+        width            : 50%
+        height           : 1.75rem
+        margin           : 0.25rem 0rem 0.75rem 0rem
+        padding          : 0.25rem 0.5rem
+        z-index          : 3
+        outline          : none
+        border           : 2px solid lightgrey
+        border-right     : none
+        box-sizing       : border-box
+        background-color : white
+
+      #search-button:hover
+        background-color : lightgrey
+        border-left      : 2px solid lightgrey
+
+      #search-button
+        position         : relative
+        display          : flex
+        flex-direction   : row
+        flex-wrap        : wrap
+        justify-content  : center
+        align-items      : center
+        align-content    : center
+        width            : calc(1.75rem + 2px)
+        height           : 1.75rem
+        transform        : translateX(-2px)
+        background-color : white
+        outline          : none
+        border           : 2px solid lightgrey
+        border-left      : 2px solid rgba(0, 0, 0, 0)
+        box-sizing       : border-box
+        margin           : 0.25rem 0rem 0.75rem 0rem
+        cursor           : pointer
+
+        img
+          transform : translateX(2px)
+
+  #results
+    position        : relative
+    display         : block
+    width           : 100%
+    height          : calc(100% - 7.5rem)
+    margin          : 0.5rem 0rem 0rem 0rem
+    padding         : 0rem 1.5rem
+    overflow-x      : hidden
+    overflow-y      : auto
+    box-sizing      : border-box
+
+    #result-placeholder
+      position    : absolute
+      left        : 50%
+      top         : 50%
+      transform   : translate(-50%, -50%)
+      width       : 100%
+      height      : auto
+      text-align  : center
+      font-weight : bolder
+      font-size   : 7.5rem
+      line-height : 7.5rem
+      color       : whitesmoke
+      user-select : none
+
+    .result:hover
+      background-color : #f0f0f0
+      border           : 1px solid #dadada
+      box-shadow       : 0rem 3px 5px -3px #9a9a9a
+
+    .result
+      position         : relative
+      display          : flex
+      flex-direction   : row
+      flex-wrap        : nowrap
+      justify-content  : flex-start
+      align-items      : flex-start
+      align-content    : flex-start
+      width            : 100%
+      height           : 5.5rem
+      margin           : 0.75rem 0rem
+      padding          : 0rem
+      background-color : #f5f5f5
+      border           : 1px solid #e0e0e0
+      box-sizing       : border-box
+      box-shadow       : 0rem 3px 5px -3px #a0a0a0
+
+      .image
+        position   : relative
+        display    : inline-block
+        width      : 5.5rem
+        height     : 5.5rem
+        margin     : 0rem 1rem 0rem 0rem
+        box-sizing : border-box
+        overflow   : hidden
+
+        img
+          position  : absolute
+          left      : 50%
+          top       : 50%
+          transform : translate(-50%, -50%)
+          width     : 8.5rem
+          height    : auto
+
+      .info
+        position        : relative
+        display         : inline-flex
+        flex-direction  : column
+        flex-wrap       : nowrap
+        justify-content : flex-start
+        align-items     : center
+        align-content   : center
+        width           : calc(100% - 6rem)
+        height          : 100%
+        margin          : 0rem
+        padding         : 0rem
+
+        .info-title
+          margin      : 0.35rem 0rem 0.25rem 0rem
+          padding     : 0rem
+          line-height : 1rem
+          user-select : none
+
+          a
+            font-size   : 1.25rem
+            font-weight : bolder
+            line-height : 1rem
+            margin      : 0rem
+            padding     : 0rem
+            color       : steelblue
+            user-select : none
+
+          span.price
+            margin      : 0rem 0rem 0rem 0.25rem
+            font-size   : 0.5rem
+            font-weight : bolder
+            line-height : 0.5rem
+            color       : darkgrey
+            user-select : none
+
+        .info-ratings
+          margin      : 0rem
+          padding     : 0rem
+          line-height : 1rem
+          user-select : none
+
+          img
+            width       : 1rem
+            height      : 1rem
+            margin      : 0rem
+            padding     : 0rem
+            user-select : none
+
+        .info-reviews
+          margin      : 0rem
+          padding     : 0rem
+          font-size   : 0.75rem
+          line-height : 0.125rem
+          user-select : none
+
+        .info-going-button.not-rsvp:active
+          border-color : black
+
+        .info-going-button.has-rsvp:active
+          border-color : red
+
+        .info-going-button.not-rsvp:hover
+          background-color : darkgrey
+
+        .info-going-button.has-rsvp:hover
+          background-color : seagreen
+
+        .info-going-button.not-rsvp
+          font-weight      : bold
+          background-color : white
+          color            : black
+          border           : 1px solid lightgrey
+
+        .info-going-button.has-rsvp
+          font-weight      : normal
+          background-color : mediumseagreen
+          color            : white
+          border           : 1px solid whitesmoke
+
+        .info-going-button
+          position         : relative
+          display          : flex
+          flex-direction   : row
+          flex-wrap        : wrap
+          justify-content  : center
+          align-items      : center
+          align-content    : center
+          width            : auto
+          height           : 1.5rem
+          outline          : none
+          box-sizing       : border-box
+          margin           : 0.45rem 0rem 0rem 0rem
+          padding          : 0rem 0.5rem
+          cursor           : pointer
+          outline          : none
+
+        .info-map:active
+          border-color : black
+
+        .info-map:hover
+          background-color : darkgrey
+
+        .info-map
+          position         : absolute
+          top              : 0.5rem
+          right            : 0.5rem
+          display          : flex
+          flex-direction   : row
+          justify-content  : center
+          align-items      : center
+          align-content    : center
+          width            : 1.5rem
+          height           : 1.5rem
+          margin           : 0rem
+          padding          : 0rem
+          background-color : white
+          box-sizing       : border-box
+          border           : 1px solid lightgrey
+          border-radius    : 50%
+          cursor           : pointer
+          outline          : none
+
+          img
+            width  : 1rem
+            height : 1rem
+
+        .info-number-going
+          position    : absolute
+          bottom      : 0.25rem
+          right       : 0.25rem
+          color       : darkgrey
+          font-size   : 0.75rem
+          line-height : 0.75rem
+          user-select : none

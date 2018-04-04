@@ -1,0 +1,2 @@
+# FreeCodeCamp - Dynamic Web Application Projects - Chart the Stock Market
+**Using [express](https://expressjs.com/), [aurelia](http://aurelia.io/) and [mongodb](https://github.com/mongodb/node-mongodb-native)**

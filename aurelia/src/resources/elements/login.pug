@@ -1,0 +1,79 @@
+template
+  #login-content
+    #login-background(click.delegate="closeLogin()")
+    #login-close-button(click.delegate="closeLogin()")
+      img(src="https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_close_black_24px.svg")
+
+    input#radio-signin(type="radio" name="login-panel" checked)
+    input#radio-signup(type="radio" name="login-panel")
+    input#radio-signreset(type="radio" name="login-panel")
+    input#radio-delay(type="radio" name="login-panel")
+
+    #delay
+      div You have attempted and failed thrice.
+      div
+        | You can attempt again in&nbsp;
+        span ${state.login.timer}
+        | &nbsp;second${state.login.timer === 1 ? '' : 's'}
+
+    #login-panel
+      label#signin-select(for="radio-signin" click.delegate="clearForm('signup')") Sign In
+      label#signup-select(for="radio-signup" click.delegate="clearForm('signin')") Sign Up
+      label#signreset-select Reset Password
+
+    #login-container
+      #wrong-login
+
+      form#signin(submit.delegate="handleLogin('signin')")
+        fieldset.login-fieldset
+          input#signin-username(type="text" placeholder="" minlength="6" keydown.delegate!="checkInput($event, 'signin') & debounce" data-length="0" required)
+          hr
+          label Username
+
+        fieldset.login-fieldset
+          input#signin-password(type="password" placeholder="" minlength="8" keydown.delegate!="checkInput($event, 'signin') & debounce" data-length="0" required)
+          hr
+          label Password
+
+        fieldset.login-fieldset
+          button#signin-submit.submit-button(type="submit" disabled) Submit
+          label#signreset-label(for="radio-signreset" click.delegate="clearForm('signin')") Forgot password
+
+      form#signup(submit.delegate="handleLogin('signup')")
+        fieldset.login-fieldset
+          input#signup-username(type="text" placeholder="" minlength="6" keydown.delegate!="checkInput($event, 'signup') & debounce" data-length="0" required)
+          hr
+          label Username (Minimum length of 6)
+
+        fieldset.login-fieldset
+          input#signup-password(type="password" placeholder="" minlength="8" keydown.delegate!="checkInput($event, 'signup') & debounce" data-length="0" required)
+          hr
+          label Password (Minimum length of 8)
+
+        fieldset.login-fieldset
+          input#signup-repassword(type="password" placeholder="" minlength="8" keydown.delegate!="checkInput($event, 'signup') & debounce" data-length="0" required)
+          hr
+          label Re-enter Password
+
+        fieldset.login-fieldset
+          button#signup-submit.submit-button(type="submit" disabled) Submit
+
+      form#signreset(submit.delegate="handleLogin('signreset')")
+        fieldset.login-fieldset
+          input#signreset-username(type="text" placeholder="" minlength="6" keydown.delegate!="checkInput($event, 'signreset') & debounce" data-length="0" required)
+          hr
+          label Username
+
+        fieldset.login-fieldset
+          input#signreset-password(type="password" placeholder="" minlength="8" keydown.delegate!="checkInput($event, 'signreset') & debounce" data-length="0" required)
+          hr
+          label Password (Minimum length of 8)
+
+        fieldset.login-fieldset
+          input#signreset-repassword(type="password" placeholder="" minlength="8" keydown.delegate!="checkInput($event, 'signreset') & debounce" data-length="0" required)
+          hr
+          label Re-enter Password
+
+        fieldset.login-fieldset
+          button#signreset-submit.submit-button(type="submit" disabled) Submit
+          label#signreset-cancel(for="radio-signin" click.delegate="clearForm('signreset')") Cancel

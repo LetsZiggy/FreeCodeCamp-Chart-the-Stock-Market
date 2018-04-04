@@ -1,0 +1,25 @@
+template
+  #footer
+    #footer-note
+      | Written by&nbsp;
+      a.footer-link(href="https://www.freecodecamp.org/letsziggy" target="_blank") LetsZiggy
+      | &nbsp;for&nbsp;
+      a.footer-link(href='https://www.freecodecamp.org/challenges/build-a-nightlife-coordination-app', target='_blank') FreeCodeCamp Challenge
+      | .
+
+    #disclaimer Not optimized for mobile (yet)
+
+    #resources-content
+      input#resources-checkbox(type="checkbox")
+      label#resources-link(for="resources-checkbox") Resources
+      label#resources-backdrop(for="resources-checkbox")
+
+      #resources-popup
+        label#resources-close(for="resources-checkbox") &#x2715;
+        h5 Resources
+        hr
+        ul
+          li
+            a(href="https://www.yelp.com/developers/documentation/v3/get_started" target="_blank") Yelp API
+          li
+            a(href="https://forum.freecodecamp.org/t/authorization-http-header-for-yelp-fusion-api-access-token/140974/4?u=letsziggy" target="_blank") Access API node-fetch
