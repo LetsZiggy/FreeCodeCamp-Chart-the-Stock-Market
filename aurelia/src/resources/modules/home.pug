@@ -1,44 +1,7 @@
 template
   #home-content
-    #title
-      img(src="https://s3.amazonaws.com/freecodecamp/freecodecamp-logo-icon-square-400-400.png")
-      | FreeCodeCamp - Build a&nbsp;
-      span Nightlife
-      | &nbsp;Restaurant Coordination App
-      #login-open-button(click.delegate="openLogin()") ${state.user.username ? "Logout" : "Login"}
-
-    #search
-      #search-title
-        h1 Hungry?
-        span &nbsp;powered by&nbsp;
-        img(src="https://s3-media1.fl.yelpcdn.com/assets/srv0/yelp_design_web/48792dd29811/assets/img/logos_desktop/default.png")
-      form#search-form(submit.delegate="handleSearch('search-input')")
-        input#search-input(type="text" autocomplete="off" placeholder="Type in your location ..." value.bind="state.location" autofocus)
-        button#search-button(type="submit")
-          img(src="https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_search_black_24px.svg")
-        //- button#search-auto
-        //-   img(src="https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_gps_fixed_black_24px.svg")
-
-    #results
-      #result-placeholder(if.bind="state.businesses.length === 0")
-        | Search for
-        br
-        | restaurants
-        br
-        | near you
-      .result(repeat.for="business of state.businesses")
-        .image
-          img(src="${business.image_url}")
-        .info
-          .info-title
-            a(href="${business.url}" target="_blank") ${business.name}
-            span.price (${business.price})
-          .info-ratings
-            img(repeat.for="i of 5" src.bind="setRatings(i, business.rating)")
-          .info-reviews (${business.review_count} review${business.review_count !== 1 ? "s" : ""})
-          button.info-going-button(id="${business.id}-button" class.bind="state.goingUser[business.id] ? 'has-rsvp' : 'not-rsvp'" click.delegate="rsvp(business.id)") ${state.goingUser[business.id] ? 'GOING' : 'RSVP'}
-          a.info-map(href.bind="setMap(business.location)" target="_blank")
-            img(src="https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_place_black_24px.svg")
-          span.info-number-going(id="${business.id}-number-going") ${state.goingTotal[business.id]} Going
-
-    login(radio.bind="radio")
+    #chart-container
+      #chart-area-outer
+        #chart-area-inner
+          canvas#chart-canvas
+      //- canvas#chart-axis-y(height="300" width="0")

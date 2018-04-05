@@ -87,7 +87,17 @@
             "main": "aurelia-validation"
           },
           "whatwg-fetch",
-          "aurelia-fetch-client"
+          "aurelia-fetch-client",
+          {
+            "name": "google-palette",
+            "path": "../node_modules/google-palette",
+            "main": "palette"
+          },
+          {
+            "name": "chartjs",
+            "path": "../node_modules/chart.js/dist",
+            "main": "Chart.bundle.min"
+          }
         ]
       }
     ],

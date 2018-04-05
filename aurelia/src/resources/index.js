@@ -1,6 +1,6 @@
 export function configure(config) {
   config.globalResources([
-    './elements/login',
+    './elements/header.html',
     './elements/footer.html'
   ]);
 }
