@@ -10,156 +10,122 @@ export class Home {
 
   constructor(ApiInterface) {
     this.api = ApiInterface;
-    this.chart = null;
+    this.chartMain = null;
+    this.chartYAxis = null;
+    this.chartLegend = null;
   }
 
   attached() {
-    let ctx = document.getElementById('chart-canvas').getContext('2d');
-    this.chart = new Chart(ctx, {
-      // The type of chart we want to create
-      type: 'line',
+    this.getInitialChartData();
 
-      // The data for our dataset
-      data: {
-          labels: ["January", "February", "March", "April", "May", "June", "July"],
-          datasets: [{
-              label: "My First dataset",
-              backgroundColor: 'rgba(0, 0, 0, 0)',
-              borderColor: 'rgb(255, 99, 132)',
-              data: [0, 10, 5, 2, 20, 30, 45],
-          }]
-      },
+    let chartAreaOuter = document.getElementById('chart-area-outer');
+    let chartAreaInner = document.getElementById('chart-area-inner');
 
-      // Configuration options go here
-      options: {
-        responsive: true,
-        maintainAspectRatio: false
-      }
-    });
-  }
-}
+    let dataMain = {};
+    let dataYAxis = {};
 
-/*
-//https://github.com/chartjs/Chart.js/issues/2958#issuecomment-261949718
-
-var ctx = document.getElementById("myChart").getContext("2d");
-var chart = {
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    animation: {
-      onComplete: function(animation) {
-        var sourceCanvas = myLiveChart.chart.canvas;
-        var copyWidth = myLiveChart.scales['y-axis-0'].width - 10;
-        var copyHeight = myLiveChart.scales['y-axis-0'].height + myLiveChart.scales['y-axis-0'].top + 10;
-        var targetCtx = document.getElementById("myChartAxis").getContext("2d");
-        targetCtx.canvas.width = copyWidth;
-        targetCtx.drawImage(sourceCanvas, 0, 0, copyWidth, copyHeight, 0, 0, copyWidth, copyHeight);
-      }
-    }
-  },
-  type: 'bar',
-  data: {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [{
-      label: "My First dataset",
-      fillColor: "rgba(220,220,220,0.2)",
-      strokeColor: "rgba(220,220,220,1)",
-      pointColor: "rgba(220,220,220,1)",
-      pointStrokeColor: "#fff",
-      pointHighlightFill: "#fff",
-      pointHighlightStroke: "rgba(220,220,220,1)",
-      data: [65, 59, 80, 81, 56, 55, 40]
-    }]
-  }
-};
-
-var myLiveChart = new Chart(ctx, chart);
-setInterval(function() {
-  myLiveChart.data.datasets[0].data.push(Math.random() * 100);
-  myLiveChart.data.labels.push("Test");
-  var newWidth = $('.chartAreaWrapperInner').width() + 60;
-  $('.chartAreaWrapperInner').width(newWidth);
-  $('.chartAreaWrapperOuter').animate({ scrollLeft: newWidth });
-}, 5000);
-*/
-
-/*
-function generateLabels() {
-  var chartLabels = [];
-  for (x = 0; x < 100; x++) {
-    chartLabels.push("Label" + x);
-  }
-  return chartLabels;
-}
-
-function generateData() {
-  var chartData = [];
-  for (x = 0; x < 100; x++) {
-    chartData.push(Math.floor((Math.random() * 100) + 1));
-  }
-  return chartData;
-}
-
-function addData(numData, chart){
-  for (var i = 0; i < numData; i++){
-    chart.data.datasets[0].data.push(Math.random() * 100);
-    chart.data.labels.push("Label" + i);
-    var newwidth = $('.chartAreaWrapper2').width() +60;
-    $('.chartAreaWrapper2').width(newwidth);
-  }
-}
-
-var chartData = {
-  labels: generateLabels(),
-  datasets: [{
-    label: "Test Data Set",
-    data: generateData()
-  }]
-};
-
-$(function() {
-  var canvasFuelSpend = $('#chart-FuelSpend');
-  var chartFuelSpend = new Chart(canvasFuelSpend, {
-    type: 'bar',
-    data: chartData,
-    maintainAspectRatio: false,
-    responsive: true,
-    options: {
+    let optionsMain = {
+      animation: false,
+      responsive: true,
+      maintainAspectRatio: false,
+      responsiveAnimationDuration: 0,
       tooltips: {
-        titleFontSize: 0,
-        titleMarginBottom: 0,
-        bodyFontSize: 12
+        enabled: true
       },
       legend: {
         display: false
+      }
+    };
+    let optionsYAxis = {
+      animation: false,
+      responsive: true,
+      maintainAspectRatio: false,
+      responsiveAnimationDuration: 0,
+      tooltips: {
+        enabled: false
       },
-      scales: {
-        xAxes: [{
-          ticks: {
-            fontSize: 12,
-            display: false
-          }
-        }],
-        yAxes: [{
-          ticks: {
-            fontSize: 12,
-            beginAtZero: true
-          }
-        }]
-      },
-      animation: {
-        onComplete: function() {
-          var sourceCanvas = chartFuelSpend.chart.canvas;
-          var copyWidth = chartFuelSpend.scales['y-axis-0'].width - 10;
-          var copyHeight = chartFuelSpend.scales['y-axis-0'].height + chartFuelSpend.scales['y-axis-0'].top + 10;
-          var targetCtx = document.getElementById("axis-FuelSpend").getContext("2d");
-          targetCtx.canvas.width = copyWidth;
-          targetCtx.drawImage(sourceCanvas, 0, 0, copyWidth, copyHeight, 0, 0, copyWidth, copyHeight);
-        }
+      legend: {
+        display: false
+      }
+    };
+
+    this.chartMain = new Chart(document.getElementById('chart-main').getContext('2d'), {
+      type: 'line',
+      data: dataMain,
+      options: optionsMain
+    });
+
+    this.chartYAxis = new Chart(document.getElementById('chart-y-axis').getContext('2d'), {
+      type: 'line',
+      data: dataYAxis,
+      options: optionsYAxis
+    });
+
+    // setTimeout(() => {
+    //   dataMain.datasets.push({
+    //     backgroundColor: 'rgba(0, 0, 0, 0)',
+    //     borderColor: 'rgb(99, 255, 132)',
+    //     data: [3, 2, 8, 20, 10, 40, 5],
+    //   });
+    //   dataMain.labels.push('August');
+    //   dataMain.datasets[0].dataMain.push(50);
+    //   dataMain.datasets[1].dataMain.push(5);
+    //   let width = chartAreaInner.getBoundingClientRect().width + 50;
+    //   chartAreaInner.style.width = `${width}px`;
+    //   chartAreaOuter.scrollLeft = width;
+    // }, 3000);
+  }
+
+  async getInitialChartData() {
+    let data = await this.api.getStocks();
+    this.state.stocks = data.stocks.map((v, i, a) => v);
+    this.state.yearStart = data.yearStart;
+    this.state.yearEnd = data.yearEnd;
+    this.state.monthStart = data.monthStart;
+    this.state.monthEnd = data.monthEnd;
+    this.state.valueMin = data.valueMin;
+    this.state.valueMax = data.valueMax;
+
+    this.setChart();
+  }
+
+  setChart() {
+    let labels = setLabels(this.state.yearStart, this.state.monthStart, this.state.yearEnd, this.state.monthEnd);
+
+    
+
+    console.log(labels);
+  }
+}
+
+function setLabels(yearStart, monthStart, yearEnd, monthEnd) {
+  console.log(yearStart, monthStart, yearEnd, monthEnd);
+  let months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
+  let labels = [];
+
+  while(yearStart <= yearEnd) {
+    while(monthStart <= 12) {
+      let date = null;
+      if(!labels.length || monthStart === 1 || (yearStart === yearEnd && monthStart === monthEnd)) {
+        date = [months[monthStart - 1], yearStart];
+      }
+      else {
+        date = months[monthStart - 1];
+      }
+
+      labels.push(date);
+
+      if(yearStart === yearEnd && monthStart === monthEnd) {
+        monthStart = 13;
+      }
+      else {
+        monthStart++;
       }
     }
-  });
-  addData(5, chartFuelSpend);
-});
-*/
+
+    yearStart++;
+    monthStart = 1;
+  }
+
+  return(labels);
+}
