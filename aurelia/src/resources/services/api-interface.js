@@ -32,15 +32,29 @@ export class ApiInterface {
     return(
       this.http.fetch(`/stocks`, {
                  method: 'GET',
-                 // credentials: 'same-origin',
+                 credentials: 'same-origin',
                  headers: {
-                   'Accept': 'application/json',
-                   // 'Content-Type': 'application/json'
-                 },
-                 // body: JSON.stringify()
+                   'Accept': 'application/json'
+                 }
                })
                .then(response => response.json())
                .then(data => handleStocks(data))
+    );
+  }
+
+  getStock(symbol) {
+    return(
+      this.http.fetch(`/stock`, {
+                 method: 'POST',
+                 credentials: 'same-origin',
+                 headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json'
+                 },
+                 body: JSON.stringify({ symbol: symbol })
+               })
+               .then(response => response.json())
+               .then(data => data)
     );
   }
 }
@@ -87,6 +101,8 @@ function handleStocks(stocks) {
         // volume: volume,
       });
     });
+
+    stock.data.reverse();
 
     // Get Years (start, end)
     stock.data.forEach((v, i, a) => {
@@ -139,7 +155,7 @@ function handleStocks(stocks) {
     data.stocks.push(stock);
   });
 
-  // Get Date (start, end)
+  // Get Max, Min, Start, End
   data.stocks.forEach((v, i, a) => {
     if(data.yearStart === null) {
       data.yearStart = v.yearStart;
