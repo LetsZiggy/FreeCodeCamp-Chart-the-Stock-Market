@@ -3,9 +3,9 @@
   display         : flex
   flex-direction  : column
   flex-wrap       : nowrap
-  justify-content : flex-start
-  align-items     : flex-start
-  align-content   : flex-start
+  justify-content : center
+  align-items     : center
+  align-content   : center
   width           : 100vw
   height          : calc(100vh - 5rem)
   box-sizing      : border-box
@@ -13,27 +13,121 @@
   margin          : 0rem
   overflow        : hidden
 
+  #chart-add
+    display         : flex
+    flex-direction  : column
+    flex-wrap       : nowrap
+    justify-content : center
+    align-items     : center
+    align-content   : center
+    width           : 100%
+    height          : 2rem
+    padding         : 0rem
+    margin          : 1rem 0rem
+
+    #chart-input
+      width      : 10rem
+      height     : 100%
+      margin     : 0rem
+      padding    : 0.25rem 1rem
+      box-sizing : border-box
+      border     : 1px solid lightgrey
+      font-size  : 1.15rem
+
+    #chart-add-instruction
+      font-size   : 0.75rem
+      line-height : 1rem
+      color       : lightgrey
+      margin      : 0rem
+      padding     : 0rem
+
   #chart-container
     position   : relative
     width      : 100%
     height     : 65%
-    margin     : 0rem
+    margin     : 0rem 0rem 1rem 0rem
     padding    : 0rem
     overflow   : hidden
     box-sizing : border-box
+    border-top : 1px solid lightgrey
 
     #chart-area-outer
-      position        : relative
-      width           : 100%
-      height          : 100%
-      overflow-x      : auto
-      overflow-y      : hidden
+      position   : relative
+      width      : 100%
+      height     : 100%
+      display    : block
+      overflow-x : auto
+      overflow-y : hidden
 
       #chart-area-inner
         position : relative
 
         #chart-main
-          position       : absolute
-          left           : 0rem
-          top            : 0rem
-          // pointer-events : none
+          position : absolute
+          left     : 0rem
+          top      : 0rem
+    
+  #chart-symbols
+    display         : flex
+    flex-direction  : row
+    flex-wrap       : wrap
+    justify-content : flex-start
+    align-items     : flex-start
+    align-content   : flex-start
+    width           : 100%
+    height          : 35%
+    margin          : 0rem
+    padding         : 1rem 3rem
+    box-sizing      : border-box
+
+    .symbol-name
+      display          : flex
+      flex-direction   : row
+      flex-wrap        : nowrap
+      justify-content  : center
+      align-items      : center
+      align-content    : center
+      position         : relative
+      width            : auto
+      height           : 2.5rem
+      margin           : 0rem 1rem
+      padding          : 0rem
+      font-size        : 1.5rem
+      line-height      : 1.5rem
+      background-color : whitesmoke
+      box-sizing       : border-box
+      border           : 1px solid ghostwhite
+      box-shadow       : 0rem 3px 5px -3px grey
+      cursor           : default
+
+      .colour
+        width  : 10px
+        height : 100%
+
+      .name
+        display         : flex
+        flex-direction  : column
+        flex-wrap       : nowrap
+        justify-content : center
+        align-items     : center
+        align-content   : center
+        width           : auto
+        height          : 100%
+        margin          : 0rem 0.25rem
+
+      .close:hover
+        background-color : crimson
+
+      .close
+        position         : absolute
+        right            : 0rem
+        top              : 0rem
+        transform        : translate(50%, -50%)
+        width            : 1.2rem
+        height           : 1.2rem
+        border-radius    : 25px
+        background-color : ghostwhite
+        box-sizing       : border-box
+        border           : 1px solid lightgrey
+        box-shadow       : 0rem 3px 5px -3px grey
+        cursor           : pointer

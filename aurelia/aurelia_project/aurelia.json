@@ -97,6 +97,14 @@
             "name": "chartjs",
             "path": "../node_modules/chart.js/dist",
             "main": "Chart.bundle.min"
+          },
+          {
+            "name": "perfect-scrollbar",
+            "path": "../node_modules/perfect-scrollbar",
+            "main": "dist/perfect-scrollbar.min",
+            "resources": [
+              "css/perfect-scrollbar.css"
+            ]
           }
         ]
       }

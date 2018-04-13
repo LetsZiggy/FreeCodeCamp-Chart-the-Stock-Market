@@ -1,5 +1,7 @@
 import {inject, bindable, bindingMode} from 'aurelia-framework';
+import * as palette from 'google-palette';
 import {Chart} from 'chartjs';
+import PerfectScrollbar from 'perfect-scrollbar';
 import {ApiInterface} from '../services/api-interface';
 import {state} from '../services/state';
 import {chartMainData, chartMainOptions} from '../services/chart-settings';
@@ -15,10 +17,11 @@ export class Home {
 
   constructor(ApiInterface) {
     this.api = ApiInterface;
-    this.chart = null;
   }
 
   attached() {
+    this.ps = new PerfectScrollbar('#chart-area-outer');
+
     this.getInitialChartData();
 
     this.chartMainOptions.tooltips.callbacks = {
@@ -49,20 +52,11 @@ export class Home {
       data: this.chartMainData,
       options: this.chartMainOptions
     });
+  }
 
-    // setTimeout(() => {
-    //   dataMain.datasets.push({
-    //     backgroundColor: 'rgba(0, 0, 0, 0)',
-    //     borderColor: 'rgb(99, 255, 132)',
-    //     data: [3, 2, 8, 20, 10, 40, 5],
-    //   });
-    //   dataMain.labels.push('August');
-    //   dataMain.datasets[0].dataMain.push(50);
-    //   dataMain.datasets[1].dataMain.push(5);
-    //   let width = chartAreaInner.getBoundingClientRect().width + 50;
-    //   chartAreaInner.style.width = `${width}px`;
-    //   chartAreaOuter.scrollLeft = width;
-    // }, 3000);
+  detached() {
+    this.ps.destroy();
+    this.ps = null;
   }
 
   async getInitialChartData() {
@@ -84,6 +78,8 @@ export class Home {
     this.state.valueMin.curr = data.valueMin;
     this.state.valueMax.curr = data.valueMax;
 
+    this.colours = palette.default('rainbow', this.state.stocks.length);
+
     this.setChart(true);
   }
 
@@ -96,7 +92,7 @@ export class Home {
       ) {
       this.chartMainData.labels = setLabels(this.state.yearStart.curr, this.state.monthStart.curr, this.state.yearEnd.curr, this.state.monthEnd.curr);
       xAxisLabels = setLabels(this.state.yearStart.curr, this.state.monthStart.curr, this.state.yearEnd.curr, this.state.monthEnd.curr, true);
-      this.chartMainData.datasets = setDatasets(this.state.stocks, this.state.yearStart.curr, this.state.monthStart.curr, this.state.yearEnd.curr, this.state.monthEnd.curr);
+      this.chartMainData.datasets = setDatasets(this.state.stocks, this.state.yearStart.curr, this.state.monthStart.curr, this.state.yearEnd.curr, this.state.monthEnd.curr, this.colours);
     }
 
     this.chart.update();
@@ -107,5 +103,31 @@ export class Home {
     let width = this.chartMainData.labels.length * 35;
     chartAreaInner.style.width = `${width}px`;
     chartAreaOuter.scrollLeft = width;
+  }
+
+  handleKeydown(event, elem) {
+    let value = document.getElementById(elem).value;
+    let regex = new RegExp('^[a-zA-Z\.\s]$');
+    let otherKeys = ['Enter', 'Shift', 'Alt', 'Control', 'Backspace', 'Insert', 'Delete', 'Home', 'End', 'PageUp', 'PageDown', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+
+    if(event.key === 'Enter' && !value.length) {
+      return(false);
+    }
+    else if(regex.test(event.key) || otherKeys.includes(event.key)) {
+      return(true);
+    }
+    else {
+      return(false);
+    }
+  }
+
+  async addStock(elem) {
+    let value = document.getElementById(elem).value;
+    let result = await this.api.getStock(value);
+    console.log(result);
+  }
+  
+  async removeStock(symbol, index) {
+    console.log(symbol, index);
   }
 }

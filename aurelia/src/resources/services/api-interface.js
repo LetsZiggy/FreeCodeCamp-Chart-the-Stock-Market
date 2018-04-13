@@ -44,7 +44,23 @@ export class ApiInterface {
 
   getStock(symbol) {
     return(
-      this.http.fetch(`/stock`, {
+      this.http.fetch(`/stock/get`, {
+                 method: 'POST',
+                 credentials: 'same-origin',
+                 headers: {
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json'
+                 },
+                 body: JSON.stringify({ symbol: symbol })
+               })
+               .then(response => response.json())
+               .then(data => data)
+    );
+  }
+
+  removeStock(symbol) {
+    return(
+      this.http.fetch(`/stock/remove`, {
                  method: 'POST',
                  credentials: 'same-origin',
                  headers: {

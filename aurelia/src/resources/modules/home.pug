@@ -1,8 +1,16 @@
 template
+  require(from="perfect-scrollbar/css/perfect-scrollbar.css")
+  
   #home-content
+    form#chart-add(submit.delegate="addStock('chart-input')")
+      input#chart-input(type="text" placeholder="SYMBOL" keydown.delegate="handleKeydown($event, 'chart-input')" autofocus)
+      span#chart-add-instruction Press 'Enter' to add
     #chart-container
       #chart-area-outer
         #chart-area-inner(style="width: 100%; height: 100%;")
           canvas#chart-main
-      //- ul
-      //-   li()
+    #chart-symbols
+      .symbol-name(repeat.for="stock of state.stocks")
+        .colour(css="background-color: #${colours[$index]};")
+        .name ${stock.symbol}
+        img.close(src="https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_close_black_24px.svg" click.delegate="removeStock(stock.symbol, $index)")

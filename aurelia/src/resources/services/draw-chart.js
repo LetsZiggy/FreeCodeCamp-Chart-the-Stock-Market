@@ -1,5 +1,3 @@
-import * as palette from 'google-palette';
-
 export function setLabels(yearStart, monthStart, yearEnd, monthEnd, allYear=false) {
   let months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
   let month = monthStart;
@@ -33,7 +31,7 @@ export function setLabels(yearStart, monthStart, yearEnd, monthEnd, allYear=fals
   return(labels);
 }
 
-export function setDatasets(stocks, yearStart, monthStart, yearEnd, monthEnd) {
+export function setDatasets(stocks, yearStart, monthStart, yearEnd, monthEnd, colours) {
   let datasets = stocks.map((v, i, a) => {
     let data = v.data.map((mv, mi, ma) => mv.close);
 
@@ -61,10 +59,7 @@ export function setDatasets(stocks, yearStart, monthStart, yearEnd, monthEnd) {
       } 
     }
 
-    let colour = palette.default('rainbow', stocks.length, 1, 1, true)
-                        .reduce((accu, rv, ri, ra) => `#${ra[i]}`, '');
-    let hoverColour = palette.default('rainbow', stocks.length, 1, 0.75, true)
-                             .reduce((accu, rv, ri, ra) => `#${ra[i]}`, '');
+    let colour = colours.reduce((accu, rv, ri, ra) => `#${ra[i]}`, '');
 
     return({
       label: v.symbol,
@@ -85,9 +80,9 @@ export function setDatasets(stocks, yearStart, monthStart, yearEnd, monthEnd) {
       pointRadius: 8,
       pointHoverRadius: 10,
       pointBorderColor: colour,
-      pointHoverBorderColor: hoverColour,
+      pointHoverBorderColor: colour,
       pointBackgroundColor: colour,
-      pointHoverBackgroundColor: hoverColour,
+      pointHoverBackgroundColor: colour,
       pointBorderWidth: 2,
       pointHoverBorderWidth: 2
     });
