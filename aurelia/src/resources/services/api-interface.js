@@ -53,7 +53,7 @@ export class ApiInterface {
                  body: JSON.stringify({ symbol: symbol.toUpperCase() })
                })
                .then(response => response.json())
-               .then(data => data) // { data: handleStock(data), update: true }
+               .then(data => data)
     );
   }
 
@@ -69,7 +69,7 @@ export class ApiInterface {
                  body: JSON.stringify({ symbol: symbol.toUpperCase() })
                })
                .then(response => response.json())
-               .then(data => data) // { update: true }
+               .then(data => data)
     );
   }
 }

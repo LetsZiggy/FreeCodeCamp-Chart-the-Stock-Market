@@ -8,6 +8,9 @@
   40%, 60%
     transform: translate3d(4px, 0, 0)
 
+.shaking
+  animation : shake 1s cubic-bezier(.36,.07,.19,.97) both
+
 #home-content
   position        : relative
   display         : flex
@@ -45,6 +48,7 @@
       font-size  : 1.15rem
 
     #chart-add-instruction
+      display     : inline-block
       font-size   : 0.75rem
       line-height : 1rem
       color       : lightgrey
@@ -112,9 +116,6 @@
     padding         : 1rem 3rem
     box-sizing      : border-box
     visibility      : hidden
-
-    .shaking
-      animation : shake 1s cubic-bezier(.36,.07,.19,.97) both
 
     .symbol-name
       display          : flex

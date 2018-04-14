@@ -184,10 +184,24 @@ export class Home {
   }
 
   async addStock(elem) {
-    let symbol = document.getElementById(elem).value;
-    let result = await this.api.addStock(symbol);
+    let input = document.getElementById(elem);
+    let result = await this.api.addStock(input.value);
 
-    if(result.update) {
+    input.value = '';
+
+    if(!result.update) {
+      let span = document.getElementById('chart-add-instruction');
+      span.innerHTML = 'ERROR! NO SUCH SYMBOL!';
+      span.style.color = 'red';
+      span.classList.add('shaking');
+
+      setTimeout(() => {
+        span.innerHTML = `Press 'Enter' to add`;
+        span.style.color = 'lightgrey';
+        span.classList.remove('shaking');
+      }, 2500);
+    }
+    else {
       this.handleStockChanges();
 
       this.state.stocks.push(result.data);

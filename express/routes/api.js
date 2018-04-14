@@ -1,5 +1,4 @@
 const https = require('https');
-const qs = require('querystring');
 const express = require('express');
 const router = express.Router();
 const mongo = require('mongodb').MongoClient;
@@ -14,7 +13,7 @@ router.get('/stocks', async (req, res, next) => {
   let collectionIDs = await db.collection('chart-the-stock-market-ids');
   let find = await collectionIDs.findOne({ type: 'symbols' }, { projection: { _id: 0, type: 0 } });
   client.close();
-  
+
   let requests = find.list.map(async (v, i, a) => new Promise((resolve, reject) => {
     let body = [];
     let request = https.request(
@@ -43,6 +42,68 @@ router.get('/stocks', async (req, res, next) => {
   });
 });
 
-// qs.stringify(location)
+router.post('/stock/get', async (req, res, next) => {
+  let body = [];
+  let request = https.request(
+    {
+      host: 'www.alphavantage.co',
+      path: `/query?apikey=${process.env.ALPHA_VANTAGE}&function=TIME_SERIES_MONTHLY_ADJUSTED&symbol=${req.body.symbol}`,
+      headers: { Accept: 'application/json' }
+    },
+    (response) => {
+      response.setEncoding('utf8');
+      response.on('data', (data) => { body.push(data.toString()); });
+      response.on('end', async () => {
+        let data = JSON.parse(body.join(''));
+
+        if(data.hasOwnProperty('Error Message')) {
+          console.log('error');
+          res.json({ update: false });
+        }
+        else {
+          mongo.connect(dbURL, (err, client) => {
+            if(err) { console.log(err); throw err; }
+            else {
+              const db = client.db(process.env.DBNAME);
+
+              db.collection('chart-the-stock-market-ids')
+                .updateOne(
+                  { type: 'symbols' },
+                  { $push: { list: req.body.symbol } }
+              );
+            }
+
+            client.close();
+          });
+
+          data = handleStock(data);
+          res.json({ data: data, update: true });
+        }
+      });
+    }
+  );
+
+  request.on('error', (error) => { console.log(error); throw error; });
+  request.end();
+});
+
+router.post('/stock/remove', async (req, res, next) => {
+  mongo.connect(dbURL, (err, client) => {
+    if(err) { console.log(err); throw err; }
+    else {
+      const db = client.db(process.env.DBNAME);
+
+      db.collection('chart-the-stock-market-ids')
+        .updateOne(
+          { type: 'symbols' },
+          { $pull: { list: req.body.symbol } }
+      );
+    }
+
+    client.close();
+  });
+
+  res.json({ update: true });
+});
 
 module.exports = router;
