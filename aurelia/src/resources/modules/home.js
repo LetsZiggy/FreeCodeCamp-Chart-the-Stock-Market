@@ -37,10 +37,13 @@ export class Home {
       label: (tooltipItem, data) => {
         let label = tooltipItem.yLabel || '';
 
-        if(label) {
+        if(label.toString().includes('.')) {
           let labelArr = label.toString().split('.');
           labelArr[1] = labelArr[1].padEnd(4, 0);
           label = ` $${labelArr[0]}.${labelArr[1]}`;
+        }
+        else {
+          label = `${label}.0000`;
         }
 
         return(label);
@@ -55,54 +58,82 @@ export class Home {
   }
 
   detached() {
+    this.chart.destroy();
     this.ps.destroy();
     this.ps = null;
   }
 
   async getInitialChartData() {
-    let data = await this.api.getStocks();
+    let result = await this.api.getStocks();
 
-    this.state.stocks = data.stocks.map((v, i, a) => v);
+    if(result.update) {
+      document.getElementById('no-data').style.visibility = 'hidden';
+      document.getElementById('no-data').style.width = '0px';
+      document.getElementById('no-data').style.height = '0px';
+      document.getElementById('chart-container').style.visibility = 'visible';
+      document.getElementById('chart-container').style.width = '100%';
+      document.getElementById('chart-container').style.height = '65%';
+      document.getElementById('chart-symbols').style.visibility = 'visible';
+      document.getElementById('chart-symbols').style.width = '100%';
+      document.getElementById('chart-symbols').style.height = 'calc(35% - 2rem)';
 
-    this.state.yearStart.prev = this.state.yearStart.curr;
-    this.state.yearEnd.prev = this.state.yearEnd.curr;
-    this.state.monthStart.prev = this.state.monthStart.curr;
-    this.state.monthEnd.prev = this.state.monthEnd.curr;
-    this.state.valueMin.prev = this.state.valueMin.curr;
-    this.state.valueMax.prev = this.state.valueMax.curr;
+      this.state.stocks = result.data.list.map((v, i, a) => v);
 
-    this.state.yearStart.curr = data.yearStart;
-    this.state.yearEnd.curr = data.yearEnd;
-    this.state.monthStart.curr = data.monthStart;
-    this.state.monthEnd.curr = data.monthEnd;
-    this.state.valueMin.curr = data.valueMin;
-    this.state.valueMax.curr = data.valueMax;
+      this.state.yearStart.curr = result.data.yearStart;
+      this.state.yearEnd.curr = result.data.yearEnd;
+      this.state.monthStart.curr = result.data.monthStart;
+      this.state.monthEnd.curr = result.data.monthEnd;
+      this.state.valueMin.curr = result.data.valueMin;
+      this.state.valueMax.curr = result.data.valueMax;
 
-    this.colours = palette.default('rainbow', this.state.stocks.length);
+      this.colours = palette.default('rainbow', this.state.stocks.length);
 
-    this.setChart(true);
+      this.setChart();
+      this.setChartArea();
+    }
+    else {
+      document.getElementById('no-data').style.visibility = 'visible';
+      document.getElementById('no-data').style.width = '100%';
+      document.getElementById('no-data').style.height = 'calc(100% - 2rem)';
+      document.getElementById('chart-container').style.visibility = 'hidden';
+      document.getElementById('chart-container').style.width = '0px';
+      document.getElementById('chart-container').style.height = '0px';
+      document.getElementById('chart-symbols').style.visibility = 'hidden';
+      document.getElementById('chart-symbols').style.width = '0px';
+      document.getElementById('chart-symbols').style.height = '0px';
+    }
   }
 
-  setChart(initial) {
-    if(   initial
-       || (this.state.yearStart.prev !== this.state.yearStart.curr
-           && this.state.monthStart.prev !== this.state.monthStart.curr)
-       || (this.state.yearEnd.prev !== this.state.yearEnd.curr
-           && this.state.monthEnd.prev !== this.state.monthEnd.curr)
+  setChart() {
+    if((this.state.yearStart.prev !== this.state.yearStart.curr
+        && this.state.monthStart.prev !== this.state.monthStart.curr) ||
+       (this.state.yearEnd.prev !== this.state.yearEnd.curr
+        && this.state.monthEnd.prev !== this.state.monthEnd.curr)
       ) {
       this.chartMainData.labels = setLabels(this.state.yearStart.curr, this.state.monthStart.curr, this.state.yearEnd.curr, this.state.monthEnd.curr);
       xAxisLabels = setLabels(this.state.yearStart.curr, this.state.monthStart.curr, this.state.yearEnd.curr, this.state.monthEnd.curr, true);
-      this.chartMainData.datasets = setDatasets(this.state.stocks, this.state.yearStart.curr, this.state.monthStart.curr, this.state.yearEnd.curr, this.state.monthEnd.curr, this.colours);
     }
 
-    this.chart.update();
+    this.chartMainData.datasets = setDatasets(this.state.stocks, this.state.yearStart.curr, this.state.monthStart.curr, this.state.yearEnd.curr, this.state.monthEnd.curr, this.colours);
 
+    this.chart.update();
+  }
+
+  setChartArea() {
     let chartAreaOuter = document.getElementById('chart-area-outer');
     let chartAreaInner = document.getElementById('chart-area-inner');
+    let width = null;
 
-    let width = this.chartMainData.labels.length * 35;
+    if(this.chartMainData.labels.length > 12) {
+      width = this.chartMainData.labels.length * 35;
+    }
+    else {
+      width = chartAreaOuter.getBoundingClientRect().width;
+    }
+
     chartAreaInner.style.width = `${width}px`;
-    chartAreaOuter.scrollLeft = width;
+    setTimeout(() => { chartAreaOuter.scrollLeft = 0; }, 50);
+    setTimeout(() => { chartAreaOuter.scrollLeft = width; }, 100);
   }
 
   handleKeydown(event, elem) {
@@ -114,6 +145,21 @@ export class Home {
       return(false);
     }
     else if(regex.test(event.key) || otherKeys.includes(event.key)) {
+      // Check if SYMBOL entered is repeated
+      if(event.key === 'Enter') {
+        let symbols = this.state.stocks.map((v, i, a) => v.symbol.toLowerCase());
+
+        if(symbols.includes(value.toLowerCase())) {
+          let index = symbols.indexOf(value.toLowerCase());
+          let divArr = document.getElementsByClassName('symbol-name');
+          divArr[index].classList.add('shaking');
+
+          setTimeout(() => { divArr[index].classList.remove('shaking'); }, 1000);
+
+          return(false);
+        }
+      }
+
       return(true);
     }
     else {
@@ -121,13 +167,143 @@ export class Home {
     }
   }
 
+  handleStockChanges() {
+    this.state.yearStart.prev = this.state.yearStart.curr || null;
+    this.state.yearEnd.prev = this.state.yearEnd.curr || null;
+    this.state.monthStart.prev = this.state.monthStart.curr || null;
+    this.state.monthEnd.prev = this.state.monthEnd.curr || null;
+    this.state.valueMin.prev = this.state.valueMin.curr || null;
+    this.state.valueMax.prev = this.state.valueMax.curr || null;
+
+    this.state.yearStart.curr = null;
+    this.state.yearEnd.curr = null;
+    this.state.monthStart.curr = null;
+    this.state.monthEnd.curr = null;
+    this.state.valueMin.curr = null;
+    this.state.valueMax.curr = null;
+  }
+
   async addStock(elem) {
-    let value = document.getElementById(elem).value;
-    let result = await this.api.getStock(value);
-    console.log(result);
+    let symbol = document.getElementById(elem).value;
+    let result = await this.api.addStock(symbol);
+
+    if(result.update) {
+      this.handleStockChanges();
+
+      this.state.stocks.push(result.data);
+
+      if(this.state.stocks.length) {
+        document.getElementById('no-data').style.visibility = 'hidden';
+        document.getElementById('no-data').style.width = '0px';
+        document.getElementById('no-data').style.height = '0px';
+        document.getElementById('chart-container').style.visibility = 'visible';
+        document.getElementById('chart-container').style.width = '100%';
+        document.getElementById('chart-container').style.height = '65%';
+        document.getElementById('chart-symbols').style.visibility = 'visible';
+        document.getElementById('chart-symbols').style.width = '100%';
+        document.getElementById('chart-symbols').style.height = 'calc(35% - 2rem)';
+      }
+
+      this.colours = palette.default('rainbow', this.state.stocks.length);
+
+      this.state.stocks.forEach((v, i, a) => {
+        if(this.state.yearStart.curr === null) {
+          this.state.yearStart.curr = v.yearStart;
+          this.state.monthStart.curr = v.monthStart;
+        }
+        else if(this.state.yearStart.curr > v.yearStart) {
+          this.state.yearStart.curr = v.yearStart;
+          this.state.monthStart.curr = v.monthStart;
+        }
+
+        if(this.state.yearEnd.curr === null) {
+          this.state.yearEnd.curr = v.yearEnd;
+          this.state.monthEnd.curr = v.monthEnd;
+        }
+        else if(this.state.yearEnd.curr < v.yearEnd) {
+          this.state.yearEnd.curr = v.yearEnd;
+          this.state.monthEnd.curr = v.monthEnd;
+        }
+
+      this.state.valueMin = this.state.valueMin === null 
+        ? v.valueMin
+        : this.state.valueMin > v.valueMin
+          ? v.valueMin
+          : this.state.valueMin;
+
+      this.state.valueMax = this.state.valueMax === null 
+        ? v.valueMax
+        : this.state.valueMax < v.valueMax
+          ? v.valueMax
+          : this.state.valueMax;
+      });
+
+      this.setChart();
+      this.setChartArea();
+    }
   }
   
   async removeStock(symbol, index) {
-    console.log(symbol, index);
+    let result = await this.api.removeStock(symbol);
+
+    if(result.update) {
+      this.handleStockChanges();
+
+      this.state.stocks.splice(index, 1);
+
+      if(!this.state.stocks.length) {
+        document.getElementById('no-data').style.visibility = 'visible';
+        document.getElementById('no-data').style.width = '100%';
+        document.getElementById('no-data').style.height = 'calc(100% - 2rem)';
+        document.getElementById('chart-container').style.visibility = 'hidden';
+        document.getElementById('chart-container').style.width = '0px';
+        document.getElementById('chart-container').style.height = '0px';
+        document.getElementById('chart-symbols').style.visibility = 'hidden';
+        document.getElementById('chart-symbols').style.width = '0px';
+        document.getElementById('chart-symbols').style.height = '0px';
+      }
+
+      this.colours = palette.default('rainbow', this.state.stocks.length);
+
+      this.state.stocks.forEach((v, i, a) => {
+        if(this.state.yearStart.curr === null) {
+          this.state.yearStart.curr = v.yearStart;
+          this.state.monthStart.curr = v.monthStart;
+        }
+        else if(this.state.yearStart.curr > v.yearStart) {
+          this.state.yearStart.curr = v.yearStart;
+          this.state.monthStart.curr = v.monthStart;
+        }
+
+        if(this.state.yearEnd.curr === null) {
+          this.state.yearEnd.curr = v.yearEnd;
+          this.state.monthEnd.curr = v.monthEnd;
+        }
+        else if(this.state.yearEnd.curr < v.yearEnd) {
+          this.state.yearEnd.curr = v.yearEnd;
+          this.state.monthEnd.curr = v.monthEnd;
+        }
+
+      this.state.valueMin = this.state.valueMin === null 
+        ? v.valueMin
+        : this.state.valueMin > v.valueMin
+          ? v.valueMin
+          : this.state.valueMin;
+
+      this.state.valueMax = this.state.valueMax === null 
+        ? v.valueMax
+        : this.state.valueMax < v.valueMax
+          ? v.valueMax
+          : this.state.valueMax;
+      });
+
+      this.setChart();
+      this.setChartArea();
+
+      let divArr = document.getElementsByClassName('colour');
+      Array.from(divArr).forEach((v, i, a) => {
+        v.style.backgroundColor = `#${this.colours[i]}`;
+      });
+    }
   }
 }

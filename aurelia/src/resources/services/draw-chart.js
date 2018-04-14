@@ -1,5 +1,26 @@
 export function setLabels(yearStart, monthStart, yearEnd, monthEnd, allYear=false) {
   let months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
+
+  // if(monthStart === null) {
+  //   let date = new Date();
+  //   monthStart = date.getMonth() + 2;
+  // }
+
+  // if(monthEnd === null) {
+  //   let date = new Date();
+  //   monthEnd = date.getMonth() + 1;
+  // }
+
+  // if(yearStart === null) {
+  //   let date = new Date();
+  //   yearStart = monthEnd !== 12 ? date.getFullYear() - 1 : date.getFullYear();
+  // }
+
+  // if(yearEnd === null) {
+  //   let date = new Date();
+  //   yearEnd = date.getFullYear();
+  // }
+
   let month = monthStart;
   let year = yearStart;
   let labels = [];
@@ -84,7 +105,7 @@ export function setDatasets(stocks, yearStart, monthStart, yearEnd, monthEnd, co
       pointBackgroundColor: colour,
       pointHoverBackgroundColor: colour,
       pointBorderWidth: 2,
-      pointHoverBorderWidth: 2
+      pointHoverBorderWidth: 2,
     });
   });
 

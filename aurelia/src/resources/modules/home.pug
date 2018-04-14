@@ -5,11 +5,15 @@ template
     form#chart-add(submit.delegate="addStock('chart-input')")
       input#chart-input(type="text" placeholder="SYMBOL" keydown.delegate="handleKeydown($event, 'chart-input')" autofocus)
       span#chart-add-instruction Press 'Enter' to add
-    #chart-container
+    #no-data(style="visibility: visible;")
+      | Not tracking
+      br
+      | any stock
+    #chart-container(style="visibility: hidden;")
       #chart-area-outer
         #chart-area-inner(style="width: 100%; height: 100%;")
           canvas#chart-main
-    #chart-symbols
+    #chart-symbols(style="visibility: hidden;")
       .symbol-name(repeat.for="stock of state.stocks")
         .colour(css="background-color: #${colours[$index]};")
         .name ${stock.symbol}
