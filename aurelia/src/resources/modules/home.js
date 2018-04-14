@@ -256,7 +256,7 @@ export class Home {
       this.setChartArea();
     }
   }
-  
+
   async removeStock(symbol, index) {
     let result = await this.api.removeStock(symbol);
 
