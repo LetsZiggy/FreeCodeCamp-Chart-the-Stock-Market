@@ -154,8 +154,8 @@ export class Home {
   }
 
   setWebsocket() {
-    // wss://letsziggy-freecodecamp-dynamic-web-application-03.glitch.me
-    this.state.webSocket = new WebSocket(`ws://localhost:3000`);
+    // this.state.webSocket = new WebSocket(`ws://localhost:3000`);
+    this.state.webSocket = new WebSocket(`wss://letsziggy-freecodecamp-dynamic-web-application-03.glitch.me`);
 
     this.state.webSocket.onopen = (event) => {
       console.log(event.type);

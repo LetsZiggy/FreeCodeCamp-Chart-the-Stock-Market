@@ -27,7 +27,7 @@ function webSocketInitialise(server) {
         let result = await handleRemove(message.symbol);
 
         if(result.bool) {
-          webSocketRemove({ type: 'remove', symbol: req.body.symbol, update: true });
+          webSocketRemove({ type: 'remove', symbol: message.symbol, update: true });
         }
         else {
           webSocketRemove({ type: 'remove', update: false });
