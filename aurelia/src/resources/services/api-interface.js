@@ -41,35 +41,45 @@ export class ApiInterface {
     );
   }
 
-  addStock(symbol) {
-    return(
-      this.http.fetch(`/stock/get`, {
-                 method: 'POST',
-                 credentials: 'same-origin',
-                 headers: {
-                   'Accept': 'application/json',
-                   'Content-Type': 'application/json'
-                 },
-                 body: JSON.stringify({ symbol: symbol.toUpperCase() })
-               })
-               .then(response => response.json())
-               .then(data => data)
-    );
+  addStock(symbol, webSocket) {
+    if(webSocket) {
+      webSocket.send(JSON.stringify({ type: 'add', symbol: symbol.toUpperCase() }));
+    }
+    else {
+      return(
+        this.http.fetch(`/stock/get`, {
+                   method: 'POST',
+                   credentials: 'same-origin',
+                   headers: {
+                     'Accept': 'application/json',
+                     'Content-Type': 'application/json'
+                   },
+                   body: JSON.stringify({ symbol: symbol.toUpperCase() })
+                 })
+                 .then(response => response.json())
+                 .then(data => data)
+      );
+    }
   }
 
-  removeStock(symbol) {
-    return(
-      this.http.fetch(`/stock/remove`, {
-                 method: 'POST',
-                 credentials: 'same-origin',
-                 headers: {
-                   'Accept': 'application/json',
-                   'Content-Type': 'application/json'
-                 },
-                 body: JSON.stringify({ symbol: symbol.toUpperCase() })
-               })
-               .then(response => response.json())
-               .then(data => data)
-    );
+  removeStock(symbol, webSocket) {
+    if(webSocket) {
+      webSocket.send(JSON.stringify({ type: 'remove', symbol: symbol.toUpperCase() }));
+    }
+    else {
+      return(
+        this.http.fetch(`/stock/remove`, {
+                   method: 'POST',
+                   credentials: 'same-origin',
+                   headers: {
+                     'Accept': 'application/json',
+                     'Content-Type': 'application/json'
+                   },
+                   body: JSON.stringify({ symbol: symbol.toUpperCase() })
+                 })
+                 .then(response => response.json())
+                 .then(data => data)
+      );
+    }
   }
 }

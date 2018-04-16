@@ -1,4 +1,5 @@
 export const state = {
+  webSocket: null,
   yearStart: { prev: null, curr: null },
   yearEnd: { prev: null, curr: null },
   monthStart: { prev: null, curr: null },

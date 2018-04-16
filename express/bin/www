@@ -5,6 +5,8 @@
  */
 
 const app = require('../app');
+const {webSocketInitialise} = require('../ws');
+// const webSocketInitialise = require('../ws');
 const debug = require('debug')('myapp:server');
 const http = require('http');
 
@@ -20,6 +22,7 @@ app.set('port', port);
  */
 
 const server = http.createServer(app);
+webSocketInitialise(server);
 
 /**
  * Listen on provided port, on all network interfaces.

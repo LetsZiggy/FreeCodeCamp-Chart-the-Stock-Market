@@ -17,12 +17,16 @@ export class Home {
 
   constructor(ApiInterface) {
     this.api = ApiInterface;
+    this.state.webSocket = null;
+    this.ps = null;
+    this.chart = null;
+    this.colours = null;
   }
 
   attached() {
     this.ps = new PerfectScrollbar('#chart-area-outer');
 
-    this.getInitialChartData();
+    this.initialise();
 
     this.chartMainOptions.tooltips.callbacks = {
       title: (tooltipItem, data) => {
@@ -55,16 +59,27 @@ export class Home {
       data: this.chartMainData,
       options: this.chartMainOptions
     });
+
+    window.onunload = (event) => {
+      if(this.state.webSocket) {
+        this.state.webSocket.close();
+        this.state.webSocket = null;
+      }
+    };
   }
 
   detached() {
+    this.state.webSocket.close();
     this.chart.destroy();
     this.ps.destroy();
     this.ps = null;
   }
 
-  async getInitialChartData() {
+  async initialise() {
     let result = await this.api.getStocks();
+    document.getElementById('no-data').innerHTML = `Not tracking <br> any stock`;
+    document.getElementById('chart-input').disabled = false;
+    document.getElementById('chart-input').focus();
 
     if(result.update) {
       document.getElementById('no-data').style.visibility = 'hidden';
@@ -102,6 +117,8 @@ export class Home {
       document.getElementById('chart-symbols').style.width = '0px';
       document.getElementById('chart-symbols').style.height = '0px';
     }
+
+    this.setWebsocket();
   }
 
   setChart() {
@@ -136,15 +153,45 @@ export class Home {
     setTimeout(() => { chartAreaOuter.scrollLeft = width; }, 100);
   }
 
+  setWebsocket() {
+    // wss://letsziggy-freecodecamp-dynamic-web-application-03.glitch.me
+    this.state.webSocket = new WebSocket(`ws://localhost:3000`);
+
+    this.state.webSocket.onopen = (event) => {
+      console.log(event.type);
+    };
+
+    this.state.webSocket.onclose = (event) => {
+      this.state.webSocket = null;
+    };
+
+    this.state.webSocket.onerror = (event) => {
+      console.log(event);
+      this.state.webSocket = null;
+    };
+
+    this.state.webSocket.onmessage = (event) => {
+      let message = JSON.parse(event.data);
+
+      if(message.type === 'add') {
+        this.addStockReceive({ data: message.data, update: message.update });
+      }
+
+      if(message.type === 'remove') {
+        this.removeStockReceive({ data: message.data, update: message.update });
+      }
+    };
+  }
+
   handleKeydown(event, elem) {
     let value = document.getElementById(elem).value;
     let regex = new RegExp('^[a-zA-Z\.\s]$');
-    let otherKeys = ['Enter', 'Shift', 'Alt', 'Control', 'Backspace', 'Insert', 'Delete', 'Home', 'End', 'PageUp', 'PageDown', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+    let specialKeys = ['Enter', 'Shift', 'Alt', 'Control', 'Backspace', 'Insert', 'Delete', 'Home', 'End', 'PageUp', 'PageDown', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12'];
 
     if(event.key === 'Enter' && !value.length) {
       return(false);
     }
-    else if(regex.test(event.key) || otherKeys.includes(event.key)) {
+    else if(regex.test(event.key) || specialKeys.includes(event.key)) {
       // Check if SYMBOL entered is repeated
       if(event.key === 'Enter') {
         let symbols = this.state.stocks.map((v, i, a) => v.symbol.toLowerCase());
@@ -183,11 +230,16 @@ export class Home {
     this.state.valueMax.curr = null;
   }
 
-  async addStock(elem) {
-    let input = document.getElementById(elem);
-    let result = await this.api.addStock(input.value);
+  async addStockSend() {
+    let result = await this.api.addStock(document.getElementById('chart-input').value, this.state.webSocket);
 
-    input.value = '';
+    if(!this.state.webSocket) {
+      this.addStockReceive(result);
+    }
+  }
+
+  addStockReceive(result) {
+    document.getElementById('chart-input').value = '';
 
     if(!result.update) {
       let span = document.getElementById('chart-add-instruction');
@@ -257,12 +309,31 @@ export class Home {
     }
   }
 
-  async removeStock(symbol, index) {
-    let result = await this.api.removeStock(symbol);
+  async removeStockSend(symbol) {
+    let result = await this.api.removeStock(symbol, this.state.webSocket);
 
-    if(result.update) {
+    if(!this.state.webSocket) {
+      this.removeStockReceive(result);
+    }
+  }
+
+  removeStockReceive(result) {
+    if(!result.update) {
+      let span = document.getElementById('chart-add-instruction');
+      span.innerHTML = 'SERVER ERROR! Please try again later!';
+      span.style.color = 'red';
+      span.classList.add('shaking');
+
+      setTimeout(() => {
+        span.innerHTML = `Press 'Enter' to add`;
+        span.style.color = 'lightgrey';
+        span.classList.remove('shaking');
+      }, 2500);
+    }
+    else {
       this.handleStockChanges();
 
+      let index = this.state.stocks.map((v, i, a) => v.symbol).indexOf(result.symbol);
       this.state.stocks.splice(index, 1);
 
       if(!this.state.stocks.length) {
