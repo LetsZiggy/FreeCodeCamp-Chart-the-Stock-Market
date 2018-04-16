@@ -17,7 +17,6 @@ export class Home {
 
   constructor(ApiInterface) {
     this.api = ApiInterface;
-    this.state.webSocket = null;
     this.ps = null;
     this.chart = null;
     this.colours = null;
