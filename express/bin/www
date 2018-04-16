@@ -6,7 +6,6 @@
 
 const app = require('../app');
 const {webSocketInitialise} = require('../ws');
-// const webSocketInitialise = require('../ws');
 const debug = require('debug')('myapp:server');
 const http = require('http');
 
