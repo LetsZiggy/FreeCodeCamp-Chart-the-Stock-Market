@@ -31,8 +31,6 @@ async function handleAdd(symbol) {
             let update = await collectionIDs.updateOne({ type: 'symbols', list: { $not: { $in: [symbol] } } }, { $push: { list: symbol } });
             client.close();
 
-            console.log(!!update.modifiedCount);
-
             data = handleStock(data);
             resolve({ data: data, bool: true, push: !!update.modifiedCount });
           }
@@ -51,8 +49,6 @@ async function handleRemove(symbol) {
   let collectionIDs = await db.collection('chart-the-stock-market-ids');
   let update = await collectionIDs.updateOne({ type: 'symbols', list: { $in: [symbol] } }, { $pull: { list: symbol } });
   client.close();
-
-  console.log(!!update.modifiedCount);
 
   return({ bool: true, push: !!update.modifiedCount });
 }
