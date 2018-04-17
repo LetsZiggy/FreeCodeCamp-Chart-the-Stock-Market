@@ -47,7 +47,7 @@ export class ApiInterface {
     }
     else {
       return(
-        this.http.fetch(`/stock/get`, {
+        this.http.fetch(`/stock/add`, {
                    method: 'POST',
                    credentials: 'same-origin',
                    headers: {

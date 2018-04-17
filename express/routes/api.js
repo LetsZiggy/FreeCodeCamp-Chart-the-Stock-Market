@@ -48,28 +48,32 @@ router.get('/stocks', async (req, res, next) => {
   }
 });
 
-router.post('/stock/get', async (req, res, next) => {
-  let result = await handleAdd(req.body.symbol, mongo, dbURL, https);
+router.post('/stock/add', async (req, res, next) => {
+  let result = await handleAdd(req.body.symbol);
 
   if(result.bool) {
-    webSocketAdd({ type: 'add', data: result.data, update: true });
+    if(result.push) {
+      webSocketAdd({ type: 'add', data: result.data, update: true });
+    }
+
     res.json({ data: result.data, update: true });
   }
   else {
-    webSocketAdd({ type: 'add', update: false });
     res.json({ update: false });
   }
 });
 
 router.post('/stock/remove', async (req, res, next) => {
-  let result = await handleRemove(req.body.symbol, mongo, dbURL);
+  let result = await handleRemove(req.body.symbol);
 
   if(result.bool) {
-    webSocketRemove({ type: 'remove', symbol: req.body.symbol, update: true });
+    if(result.push) {
+      webSocketRemove({ type: 'remove', symbol: req.body.symbol, update: true });
+    }
+
     res.json({ symbol: req.body.symbol, update: true });
   }
   else {
-    webSocketRemove({ type: 'remove', update: false });
     res.json({ update: false });
   }
 });

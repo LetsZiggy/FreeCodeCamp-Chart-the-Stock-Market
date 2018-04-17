@@ -16,7 +16,7 @@ function webSocketInitialise(server) {
       if(message.type === 'add') {
         let result = await handleAdd(message.symbol);
 
-        if(result.bool) {
+        if(result.push) {
           webSocketAdd({ type: 'add', data: result.data, update: true });
         }
         else {
@@ -26,7 +26,7 @@ function webSocketInitialise(server) {
       else if(message.type === 'remove') {
         let result = await handleRemove(message.symbol);
 
-        if(result.bool) {
+        if(result.push) {
           webSocketRemove({ type: 'remove', symbol: message.symbol, update: true });
         }
         else {

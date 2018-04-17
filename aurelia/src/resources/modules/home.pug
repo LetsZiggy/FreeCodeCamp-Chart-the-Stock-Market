@@ -3,7 +3,7 @@ template
   
   #home-content
     form#chart-add(submit.delegate="addStockSend()")
-      input#chart-input(type="text" placeholder="SYMBOL" keydown.delegate="handleKeydown($event, 'chart-input')" disabled)
+      input#chart-input(type="text" placeholder="SYMBOL" keydown.delegate="handleKeydown($event)" disabled)
       span#chart-add-instruction Press 'Enter' to add
     #no-data(style="visibility: visible;") Loading data ...
     #chart-container(style="visibility: hidden;")

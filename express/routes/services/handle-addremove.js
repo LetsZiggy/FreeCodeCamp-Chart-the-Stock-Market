@@ -22,17 +22,19 @@ async function handleAdd(symbol) {
 
           if(data.hasOwnProperty('Error Message')) {
             console.log('error');
-            resolve({ bool: false });
+            resolve({ bool: false, push: false });
           }
           else {
             let client = await mongo.connect(dbURL);
             let db = await client.db(process.env.DBNAME);
             let collectionIDs = await db.collection('chart-the-stock-market-ids');
-            let update = await collectionIDs.updateOne({ type: 'symbols' }, { $push: { list: symbol } });
+            let update = await collectionIDs.updateOne({ type: 'symbols', list: { $not: { $in: [symbol] } } }, { $push: { list: symbol } });
             client.close();
 
-            data = handleStock(data)
-            resolve({ data: data, bool: true });
+            console.log(!!update.modifiedCount);
+
+            data = handleStock(data);
+            resolve({ data: data, bool: true, push: !!update.modifiedCount });
           }
         });
       });
@@ -47,10 +49,12 @@ async function handleRemove(symbol) {
   let client = await mongo.connect(dbURL);
   let db = await client.db(process.env.DBNAME);
   let collectionIDs = await db.collection('chart-the-stock-market-ids');
-  let update = await collectionIDs.updateOne({ type: 'symbols' }, { $pull: { list: symbol } });
+  let update = await collectionIDs.updateOne({ type: 'symbols', list: { $in: [symbol] } }, { $pull: { list: symbol } });
   client.close();
 
-  return({ bool: update.result.ok });
+  console.log(!!update.modifiedCount);
+
+  return({ bool: true, push: !!update.modifiedCount });
 }
 
 module.exports = {
