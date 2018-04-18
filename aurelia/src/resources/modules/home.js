@@ -58,17 +58,9 @@ export class Home {
       data: this.chartMainData,
       options: this.chartMainOptions
     });
-
-    window.onunload = (event) => {
-      if(this.state.webSocket) {
-        this.state.webSocket.close();
-        this.state.webSocket = null;
-      }
-    };
   }
 
   detached() {
-    this.state.webSocket.close();
     this.chart.destroy();
     this.ps.destroy();
     this.ps = null;

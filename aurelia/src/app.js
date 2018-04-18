@@ -1,4 +1,18 @@
+import {bindable, bindingMode} from 'aurelia-framework';
+import {state} from './resources/services/state';
+
 export class App {
+  @bindable({ defaultBindingMode: bindingMode.twoWay }) state = state;
+
+  attached() {
+    window.onbeforeunload = (event) => {
+      if(this.state.webSocket) {
+        this.state.webSocket.close();
+        this.state.webSocket = null;
+      }
+    };
+  }
+
   configureRouter(config, router) {
     this.router = router;
     config.title = 'FreeCodeCamp - Chart the Stock Market';
