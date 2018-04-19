@@ -154,6 +154,7 @@ export class Home {
 
     this.state.webSocket.onclose = (event) => {
       this.state.webSocket = null;
+      console.log('close');
     };
 
     this.state.webSocket.onerror = (event) => {
