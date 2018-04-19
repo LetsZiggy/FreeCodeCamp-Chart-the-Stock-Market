@@ -9,6 +9,7 @@ export class App {
       if(this.state.webSocket) {
         this.state.webSocket.close();
         this.state.webSocket = null;
+        console.log('close');
       }
     };
   }
