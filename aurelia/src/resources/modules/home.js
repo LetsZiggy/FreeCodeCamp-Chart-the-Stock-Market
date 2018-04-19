@@ -149,7 +149,7 @@ export class Home {
     this.state.webSocket = new WebSocket(`wss://letsziggy-freecodecamp-dynamic-web-application-03.glitch.me`);
 
     this.state.webSocket.onopen = (event) => {
-      console.log(event.type);
+      console.log('open');
     };
 
     this.state.webSocket.onclose = (event) => {
@@ -157,8 +157,8 @@ export class Home {
     };
 
     this.state.webSocket.onerror = (event) => {
-      console.log(event);
       this.state.webSocket = null;
+      console.log('error');
     };
 
     this.state.webSocket.onmessage = (event) => {
@@ -183,6 +183,7 @@ export class Home {
       return(false);
     }
     else if(regex.test(event.key) || specialKeys.includes(event.key)) {
+
       // Check if SYMBOL entered is repeated
       if(event.key === 'Enter') {
         let symbols = this.state.stocks.map((v, i, a) => v.symbol.toLowerCase());
