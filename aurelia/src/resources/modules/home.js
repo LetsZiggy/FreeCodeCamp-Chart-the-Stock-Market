@@ -79,9 +79,9 @@ export class Home {
       document.getElementById('chart-container').style.visibility = 'visible';
       document.getElementById('chart-container').style.width = '100%';
       document.getElementById('chart-container').style.height = '65%';
-      document.getElementById('chart-symbols').style.visibility = 'visible';
-      document.getElementById('chart-symbols').style.width = '100%';
-      document.getElementById('chart-symbols').style.height = 'calc(35% - 2rem)';
+      document.getElementById('chart-options').style.visibility = 'visible';
+      document.getElementById('chart-options').style.width = '100%';
+      document.getElementById('chart-options').style.height = 'calc(35% - 2rem)';
 
       this.state.stocks = result.data.list.map((v, i, a) => v);
 
@@ -104,9 +104,9 @@ export class Home {
       document.getElementById('chart-container').style.visibility = 'hidden';
       document.getElementById('chart-container').style.width = '0px';
       document.getElementById('chart-container').style.height = '0px';
-      document.getElementById('chart-symbols').style.visibility = 'hidden';
-      document.getElementById('chart-symbols').style.width = '0px';
-      document.getElementById('chart-symbols').style.height = '0px';
+      document.getElementById('chart-options').style.visibility = 'hidden';
+      document.getElementById('chart-options').style.width = '0px';
+      document.getElementById('chart-options').style.height = '0px';
     }
 
     this.setWebsocket();
@@ -258,9 +258,9 @@ export class Home {
         document.getElementById('chart-container').style.visibility = 'visible';
         document.getElementById('chart-container').style.width = '100%';
         document.getElementById('chart-container').style.height = '65%';
-        document.getElementById('chart-symbols').style.visibility = 'visible';
-        document.getElementById('chart-symbols').style.width = '100%';
-        document.getElementById('chart-symbols').style.height = 'calc(35% - 2rem)';
+        document.getElementById('chart-options').style.visibility = 'visible';
+        document.getElementById('chart-options').style.width = '100%';
+        document.getElementById('chart-options').style.height = 'calc(35% - 2rem)';
       }
 
       this.colours = palette.default('rainbow', this.state.stocks.length);
@@ -336,9 +336,9 @@ export class Home {
         document.getElementById('chart-container').style.visibility = 'hidden';
         document.getElementById('chart-container').style.width = '0px';
         document.getElementById('chart-container').style.height = '0px';
-        document.getElementById('chart-symbols').style.visibility = 'hidden';
-        document.getElementById('chart-symbols').style.width = '0px';
-        document.getElementById('chart-symbols').style.height = '0px';
+        document.getElementById('chart-options').style.visibility = 'hidden';
+        document.getElementById('chart-options').style.width = '0px';
+        document.getElementById('chart-options').style.height = '0px';
       }
 
       this.colours = palette.default('rainbow', this.state.stocks.length);
@@ -384,4 +384,16 @@ export class Home {
       });
     }
   }
+
+  // changeTimeline(range) {
+  //   let buttons = Array.from(document.getElementsByClassName('timeline-button'));
+  //   buttons.forEach((v, i, a) => {
+  //     if(range === i) {
+  //       v.dataset.current = 'true';
+  //     }
+  //     else {
+  //       v.dataset.current = 'false';
+  //     }
+  //   });
+  // }
 }
