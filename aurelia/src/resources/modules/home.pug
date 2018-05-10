@@ -20,4 +20,4 @@ template
       .symbol-name(repeat.for="stock of state.stocks")
         .colour(css="background-color: #${colours[$index]};")
         .name ${stock.symbol}
-        img.close(src="https://storage.googleapis.com/material-icons/external-assets/v4/icons/svg/ic_close_black_24px.svg" click.delegate="removeStockSend(stock.symbol)")
+        img.close(src="https://material.io/tools/icons/static/icons/baseline-close-24px.svg" click.delegate="removeStockSend(stock.symbol)")
