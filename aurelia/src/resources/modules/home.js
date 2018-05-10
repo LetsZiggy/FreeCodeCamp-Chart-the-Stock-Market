@@ -177,14 +177,13 @@ export class Home {
 
   handleKeydown(event) {
     let value = document.getElementById('chart-input').value;
-    let regex = new RegExp('^[a-zA-Z\.\s]$');
+    let regex = new RegExp('^[-_a-zA-Z0-9 \.]$');
     let specialKeys = ['Enter', 'Shift', 'Alt', 'Control', 'Backspace', 'Insert', 'Del', 'Delete', 'Home', 'End', 'PageUp', 'PageDown', 'Tab', 'Up', 'ArrowUp', 'Down', 'ArrowDown', 'Left', 'ArrowLeft', 'Right', 'ArrowRight', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12'];
 
     if(event.key === 'Enter' && !value.length) {
       return(false);
     }
     else if(regex.test(event.key) || specialKeys.includes(event.key)) {
-
       // Check if SYMBOL entered is repeated
       if(event.key === 'Enter') {
         let symbols = this.state.stocks.map((v, i, a) => v.symbol.toLowerCase());
@@ -199,8 +198,9 @@ export class Home {
           return(false);
         }
       }
-
-      return(true);
+      else {
+        return(true);
+      }
     }
     else {
       return(false);
