@@ -20,7 +20,7 @@ router.get('/stocks', async (req, res, next) => {
       let body = [];
       let request = https.request(
         {
-          host: 'www.alphavantage.co',
+          host: `www.alphavantage.co`,
           path: `/query?apikey=${process.env.ALPHA_VANTAGE}&function=TIME_SERIES_MONTHLY_ADJUSTED&symbol=${v}`,
           headers: { Accept: 'application/json' }
         },
