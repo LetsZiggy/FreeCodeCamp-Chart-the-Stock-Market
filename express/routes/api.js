@@ -18,24 +18,72 @@ router.get('/stocks', async (req, res, next) => {
   if(find.list.length) {
     let requests = find.list.map(async (v, i, a) => new Promise((resolve, reject) => {
       let body = [];
-      let request = https.request(
-        {
-          host: `www.alphavantage.co`,
-          path: `/query?apikey=${process.env.ALPHA_VANTAGE}&function=TIME_SERIES_MONTHLY_ADJUSTED&symbol=${v}`,
-          headers: { Accept: 'application/json' }
-        },
-        (response) => {
-          response.setEncoding('utf8');
-          response.on('data', (data) => { body.push(data.toString()); });
-          response.on('end', () => {
-            let data = JSON.parse(body.join(''));
-            resolve(data);
-          });
-        }
-      );
+      /*--------------*/
+      /*--- QUANDL ---*/
+      /*--------------*/
+      setTimeout(() => {
+        let request = https.request(
+          {
+            host: `www.quandl.com`,
+            path: `/api/v3/datasets/wiki/${v}/data.json?api_key=${process.env.QUANDL}&column_index=11&order=asc&collapse=monthly`,
+            headers: { Accept: 'application/json' }
+          },
+          (response) => {
+            response.setEncoding('utf8');
+            response.on('data', (data) => { body.push(data.toString()); });
+            response.on('end', () => {
+              let data = JSON.parse(body.join(''));
 
-      request.on('error', (error) => { console.log(error); throw error; });
-      request.end();
+              if(data.hasOwnProperty('quandl_error')) {
+                console.log('error');
+                resolve({
+                  error: true,
+                  symbol: v
+                  // start_date: 'null-null-null',
+                  // end_date: 'null-null-null',
+                  // order: 'asc',
+                  // column_names: ['date', 'Adj. Close'],
+                  // data: []
+                });
+              }
+              else {
+                data.dataset_data.symbol = v;
+                resolve(data.dataset_data);
+              }
+            });
+          }
+        );
+        /*--------------*/
+        /*--- QUANDL ---*/
+        /*--------------*/
+        //
+        //
+        //
+        /*---------------------*/
+        /*--- ALPHA VANTAGE ---*/
+        /*---------------------*/
+        // let request = https.request(
+        //   {
+        //     host: `www.alphavantage.co`,
+        //     path: `/query?apikey=${process.env.ALPHA_VANTAGE}&function=TIME_SERIES_MONTHLY_ADJUSTED&symbol=${v}`,
+        //     headers: { Accept: 'application/json' }
+        //   },
+        //   (response) => {
+        //     response.setEncoding('utf8');
+        //     response.on('data', (data) => { body.push(data.toString()); });
+        //     response.on('end', () => {
+        //       let data = JSON.parse(body.join(''));
+        //       resolve(data);
+        //     });
+        //   }
+        // );
+        /*---------------------*/
+        /*--- ALPHA VANTAGE ---*/
+        /*---------------------*/
+
+        request.on('error', (error) => { console.log(error); throw error; });
+        request.end();
+      }, (i * 1000));
     }));
     
     Promise.all(requests).then((values) => {
@@ -68,10 +116,10 @@ router.post('/stock/remove', async (req, res, next) => {
 
   if(result.bool) {
     if(result.push) {
-      webSocketRemove({ type: 'remove', symbol: req.body.symbol, update: true });
+      webSocketRemove({ type: 'remove', data: req.body.symbol, update: true });
     }
 
-    res.json({ symbol: req.body.symbol, update: true });
+    res.json({ data: req.body.symbol, update: true });
   }
   else {
     res.json({ update: false });

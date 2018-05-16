@@ -41,7 +41,7 @@ export class ApiInterface {
     );
   }
 
-  addStock(symbol, webSocket) {
+  addStock(symbol, webSocket=null) {
     if(webSocket) {
       webSocket.send(JSON.stringify({ type: 'add', symbol: symbol.toUpperCase() }));
     }
@@ -62,7 +62,7 @@ export class ApiInterface {
     }
   }
 
-  removeStock(symbol, webSocket) {
+  removeStock(symbol, webSocket=null) {
     if(webSocket) {
       webSocket.send(JSON.stringify({ type: 'remove', symbol: symbol.toUpperCase() }));
     }

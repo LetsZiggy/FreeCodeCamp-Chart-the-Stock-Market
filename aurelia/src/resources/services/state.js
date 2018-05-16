@@ -6,5 +6,6 @@ export const state = {
   monthEnd: { prev: null, curr: null },
   valueMin: { prev: null, curr: null },
   valueMax: { prev: null, curr: null },
+  chartTime: 0,
   stocks: []
 };

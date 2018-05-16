@@ -117,43 +117,45 @@
     box-sizing      : border-box
     visibility      : hidden
 
-    // #chart-time
-    //   display         : flex
-    //   flex-direction  : row
-    //   flex-wrap       : nowrap
-    //   justify-content : flex-start
-    //   align-items     : center
-    //   align-content   : center
-    //   width           : 100%
-    //   height          : 1.5rem
-    //   margin          : 0rem 1rem 1.5rem 1rem
-    //   padding         : 0rem
-    //   box-sizing      : border-box
+    #chart-time
+      display         : flex
+      flex-direction  : row
+      flex-wrap       : nowrap
+      justify-content : flex-start
+      align-items     : center
+      align-content   : center
+      width           : 100%
+      height          : 1.5rem
+      margin          : 0rem 1rem 1.5rem 1rem
+      padding         : 0rem
+      box-sizing      : border-box
+      user-select     : none
 
-    //   #chart-time-title
-    //     padding     : 0rem
-    //     margin      : 0rem
-    //     font-size   : 1.25rem
-    //     color       : grey
+      #chart-time-title
+        padding     : 0rem
+        margin      : 0rem
+        font-size   : 0.85rem
+        line-height : 0.85rem
+        color       : grey
 
-    //   button[data-current="true"]
-    //     background-color : lightgrey
-    //     pointer          : default
+      button[data-current="true"]
+        background-color : lightgrey
+        pointer          : default
 
-    //   button:hover
-    //     background-color : lightgrey
-    //     border           : 1px solid grey
+      button:hover
+        background-color : lightgrey
 
-    //   button
-    //     min-width        : 3rem
-    //     min-height       : 1.5rem
-    //     padding          : 0.25rem
-    //     margin           : 0rem 0.5rem
-    //     font-size        : 1rem
-    //     background-color : whitesmoke
-    //     box-sizing       : border-box
-    //     border           : 1px solid lightgrey
-    //     cursor           : pointer
+      button
+        min-width        : 3rem
+        min-height       : 1.5rem
+        padding          : 0.25rem
+        margin           : 0rem 0.5rem
+        font-size        : 0.85rem
+        line-height      : 0.85rem
+        background-color : whitesmoke
+        box-sizing       : border-box
+        border           : 1px solid lightgrey
+        cursor           : pointer
 
     .symbol-name
       display          : flex

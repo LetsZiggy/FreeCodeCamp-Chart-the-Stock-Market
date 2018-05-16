@@ -1,25 +1,12 @@
-export function setLabels(yearStart, monthStart, yearEnd, monthEnd, allYear=false) {
+let useDates = [
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+  [3, 6, 9, 12],
+  [6, 12],
+  [12]
+];
+
+export function setLabels(yearStart, monthStart, yearEnd, monthEnd, allYear, chartTime) {
   let months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
-
-  // if(monthStart === null) {
-  //   let date = new Date();
-  //   monthStart = date.getMonth() + 2;
-  // }
-
-  // if(monthEnd === null) {
-  //   let date = new Date();
-  //   monthEnd = date.getMonth() + 1;
-  // }
-
-  // if(yearStart === null) {
-  //   let date = new Date();
-  //   yearStart = monthEnd !== 12 ? date.getFullYear() - 1 : date.getFullYear();
-  // }
-
-  // if(yearEnd === null) {
-  //   let date = new Date();
-  //   yearEnd = date.getFullYear();
-  // }
 
   let month = monthStart;
   let year = yearStart;
@@ -28,14 +15,15 @@ export function setLabels(yearStart, monthStart, yearEnd, monthEnd, allYear=fals
   while(year <= yearEnd) {
     while(month <= 12) {
       let date = null;
-      if(allYear || !labels.length || month === 1 || (year === yearEnd && month === monthEnd)) {
-        date = [months[month - 1], year];
-      }
-      else {
-        date = months[month - 1];
-      }
 
-      labels.push(date);
+      if((allYear && useDates[chartTime].includes(month)) || (chartTime === 3 && useDates[chartTime].includes(month)) || (!labels.length || (year === yearEnd && month === monthEnd) || (month === useDates[chartTime][0] && year !== yearStart))) {
+        date = [months[month - 1], year];
+        labels.push(date);
+      }
+      else if(useDates[chartTime].includes(month)) {
+        date = months[month - 1];
+        labels.push(date);
+      }
 
       if(year === yearEnd && month === monthEnd) {
         month = 13;
@@ -52,33 +40,9 @@ export function setLabels(yearStart, monthStart, yearEnd, monthEnd, allYear=fals
   return(labels);
 }
 
-export function setDatasets(stocks, yearStart, monthStart, yearEnd, monthEnd, colours) {
+export function setDatasets(stocks, yearStart, monthStart, yearEnd, monthEnd, colours, chartTime) {
   let datasets = stocks.map((v, i, a) => {
-    let data = v.data.map((mv, mi, ma) => mv.close);
-
-    // Pad data array if stock starts later than yearStart && monthStart
-    if(v.yearStart !== yearStart || v.monthStart !== monthStart) {
-      let unshift = ((v.yearStart * 12) + v.monthStart) - ((yearStart * 12) + monthStart);
-
-      if(unshift > 0) {
-        while(unshift > 0) {
-          data.unshift(null);
-          unshift--;
-        }
-      }
-    }
-
-    // Pad data array if stock ends earlier than yearEnd && monthEnd
-    if(v.yearEnd !== yearEnd || v.monthEnd !== monthEnd) {
-      let push = ((v.yearEnd * 12) + v.monthEnd) - ((yearEnd * 12) + monthEnd);
-
-      if(push < 0) {
-        while(push < 0) {
-          data.push('end');
-          push++;
-        }
-      } 
-    }
+    let data = conformToChartTime(v.data, chartTime);
 
     let colour = colours.reduce((accu, rv, ri, ra) => `#${ra[i]}`, '');
 
@@ -110,4 +74,21 @@ export function setDatasets(stocks, yearStart, monthStart, yearEnd, monthEnd, co
   });
 
   return(datasets);
+}
+
+function conformToChartTime(data, chartTime) {
+  let conformed = data.reduce((acc, v, i, a) => {
+    if(useDates[chartTime].includes(v.month) || i === 0 || i === (a.length - 1)) {
+      if(v.close === null) {
+        acc.push(null);
+      }
+      else {
+        acc.push(v.close);
+      }
+    }
+
+    return(acc)
+  }, []);
+
+  return(conformed);
 }

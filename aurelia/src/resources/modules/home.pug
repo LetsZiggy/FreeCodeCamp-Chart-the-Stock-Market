@@ -2,21 +2,24 @@ template
   require(from="perfect-scrollbar/css/perfect-scrollbar.css")
   
   #home-content
-    form#chart-add(submit.delegate="addStockSend()")
+    #chart-add
       input#chart-input(type="text" placeholder="SYMBOL" keydown.delegate="handleKeydown($event)" disabled)
       span#chart-add-instruction Press 'Enter' to add
+
     #no-data(style="visibility: visible;") Loading data ...
+
     #chart-container(style="visibility: hidden;")
       #chart-area-outer
         #chart-area-inner(style="width: 100%; height: 100%;")
           canvas#chart-main
+
     #chart-options(style="visibility: hidden;")
-      //- #chart-time
-      //-   div#chart-time-title Zoom:
-      //-   button.timeline-button(click.delegate="changeTimeline(0)" data-current="true") 1mth
-      //-   button.timeline-button(click.delegate="changeTimeline(1)" data-current="false") 3mth
-      //-   button.timeline-button(click.delegate="changeTimeline(2)" data-current="false") 6mth
-      //-   button.timeline-button(click.delegate="changeTimeline(3)" data-current="false") 1yr
+      #chart-time
+        div#chart-time-title Timescale:
+        button.timeline-button(click.delegate="changeTimeline(0)" data-current="true") Monthly
+        button.timeline-button(click.delegate="changeTimeline(1)" data-current="false") Quarterly
+        button.timeline-button(click.delegate="changeTimeline(2)" data-current="false") Biyearly
+        button.timeline-button(click.delegate="changeTimeline(3)" data-current="false") Yearly
       .symbol-name(repeat.for="stock of state.stocks")
         .colour(css="background-color: #${colours[$index]};")
         .name ${stock.symbol}
