@@ -468,6 +468,7 @@ export class Home {
 
         this.setHTMLContainers();
         this.removeDataPadding();
+        this.addDataPadding();
         this.colours = palette.default('rainbow', this.state.stocks.length);
 
         this.setChart();
@@ -492,8 +493,10 @@ export class Home {
       }
     });
 
-    this.state.chartTime = range;
-    this.setChart();
-    this.setChartArea();
+    if(range !== this.state.chartTime) {
+      this.state.chartTime = range;
+      this.setChart();
+      this.setChartArea();
+    }
   }
 }
