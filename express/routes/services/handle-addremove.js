@@ -8,6 +8,7 @@ async function handleAdd(symbol) {
   return(
     new Promise((resolve, reject) => {
       let body = [];
+
       /*--------------*/
       /*--- QUANDL ---*/
       /*--------------*/
@@ -45,9 +46,9 @@ async function handleAdd(symbol) {
       /*--------------*/
       /*--- QUANDL ---*/
       /*--------------*/
-      //
-      //
-      //
+
+
+
       /*---------------------*/
       /*--- ALPHA VANTAGE ---*/
       /*---------------------*/

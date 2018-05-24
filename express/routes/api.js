@@ -18,6 +18,7 @@ router.get('/stocks', async (req, res, next) => {
   if(find.list.length) {
     let requests = find.list.map(async (v, i, a) => new Promise((resolve, reject) => {
       let body = [];
+
       /*--------------*/
       /*--- QUANDL ---*/
       /*--------------*/
@@ -56,9 +57,9 @@ router.get('/stocks', async (req, res, next) => {
         /*--------------*/
         /*--- QUANDL ---*/
         /*--------------*/
-        //
-        //
-        //
+
+
+
         /*---------------------*/
         /*--- ALPHA VANTAGE ---*/
         /*---------------------*/
